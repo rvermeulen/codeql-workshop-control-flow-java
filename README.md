@@ -40,7 +40,8 @@ Please complete this section before the workshop, if possible.
   git clone https://github.com/rvermeulen/codeql-workshop-control-flow-java
   ```
 
-- Add the database `spring-project/spring-petclinic` using the `Download Database from GitHub` option in the CodeQL extension database view.
+- Install the CodeQL pack dependencies using the command `CodeQL: Install Pack Dependencies` and select `exercises`, `solutions`, and `solutions-tests`.
+- Add the database `spring-project/spring-petclinic` using the command `CodeQL: Download Database from GitHub`.
 
 ## Workshop
 
@@ -58,10 +59,10 @@ In these exercises you will learn:
 ### Control flow
 
 Control flow is an ordering on program elements that dictates the order in which program elements are executed or evaluated.
-The control flow of a program is captured by a control flow graph that has labelled directed edges between nodes that capture the order and possible conditions for the flow to occur.
+The control flow of a program is captured by a control flow graph that has labelled directed edges between nodes that capture the order and conditions for the flow to occur.
 
 When CodeQL extracts code, it will create an abstract syntax tree (AST), and based on the AST it will create a control flow graph (CFG) to capture the order of execution.
-The CodeQL standard library for Java compute an expression-level intra-procedural CFG and exposes the CFG via the class `ControlFlowNode` and the successor relation `getASuccessor`.
+The CodeQL standard library for Java computes an expression-level intra-procedural CFG and exposes the CFG via the class `ControlFlowNode` and the successor relation `getASuccessor`.
 This means that the CFG has edges between expressions, statements, and methods.
 An important goal of the computed CFG is to accurately capture the order of side-effects in a program.
 
@@ -73,7 +74,7 @@ public int foo(int n) {
 }
 ```
 
-The following AST captures the parent child relation ship and based on that the following CFG is generated.
+The following AST captures the parent child relationship and based on that relationship the following CFG is generated.
 The edges are labelled with the order for clarification and are not part of the actual CFG.
 
 Looking at the CFG we can make a few observations:
@@ -121,8 +122,8 @@ Looking at the CFG we can make a few observations:
  `─────────'             `─────────'                                                                       
 ```
 
-Each CFG node in the previous example have a single successor.
-When we include constructs like conditions or loops we will encounter CFG nodes with multiple successors.
+Each CFG node in the previous example has a single successor.
+When we include constructs like conditions or loops, we will encounter CFG nodes with multiple successors.
 
 Consider the following snippet:
 
@@ -180,7 +181,7 @@ For which we generate the following AST and CFG:
 ```
 
 Here we can see a CFG with a node that has multiple successors.
-The `MethodAccess` part of the condition in the `if` statement continues execution to one of two successor depending on whether the condition evaluates to `true` or `false`.
+The `MethodAccess` part of the condition in the `if` statement continues execution to one of two successors depending on whether the condition evaluates to `true` or `false`.
 This is reflected in the labels of the outgoing CFG edges.
 
 Next are the exercises used to further explore control flow.
@@ -205,7 +206,7 @@ A solution can be found in the query [Exercise1.ql](solutions/Exercise1.ql)
 
 Now that we have described how two control flow nodes relate using the successor relationship we can reason about reachability.
 Reachability is a concept from graph theory that refers to the ability to get from one vertex to another within a graph.
-In our case it means that control can be transferred from a node in the CFG to another node in the CFG.
+In our case it means that control can be transferred from one node in the CFG to another node in the CFG.
 Or more concretely, the reachable node will be executed after executing the node it is reachable from.
 
 Implement the _predicate_ `reachable` using the successor relationship by completing the query [Exercise2.ql](exercises/Exercise2.ql).
@@ -237,8 +238,8 @@ A solution can be found in the query [Exercise3.ql](solutions/Exercise3.ql)
 
 #### Exercise 4
 
-From the results of the previous exercises we can see that the control flow paths include both statements and expressions.
-In some cases you would be interested in determining the successor statement of another statement.
+From the results of the previous exercises, we can see that the control flow paths include both statements and expressions.
+In some cases, you would be interested in determining the successor statement of another statement.
 For example, given an _if_ statement, what is the next reachable _if_ statement.
 Our `reachable` predicate will return all reachable _if_ statement so additional logic is required to answer the question.
 
@@ -302,7 +303,7 @@ with the following CFG.
     `───────'          `───────'              
 ```
 
-If you run your query on the _Pet Clinic_ database you will see results without a path.
+If you run your query on the _Pet Clinic_ database, you will see results without a path.
 Can you explain why this happens?
 
 
@@ -312,7 +313,7 @@ Can you explain why this happens?
 When you use the `reachable` predicate you need to exclude results to include only the strict successor statements.
 However, you cannot exclude the correct nodes due to conditional nodes. See the above example snippet and CFG.
 
-To implement a correct solution you need to resort to a _recursive_ predicate.
+To implement a correct solution, you need to resort to a _recursive_ predicate.
 
 </details>
 
@@ -320,9 +321,9 @@ A solution can be found in the query [Exercise4.ql](solutions/Exercise4.ql)
 
 #### Exercise 5
 
-Now that we have an understanding of the _successor_ relation, the control flow graph, and _reachability_, we can look at how reachability can be used.
+Now that we understand the _successor_ relation, the control flow graph, and _reachability_, we can look at how reachability can be used.
 
-In multiple scenarios, including security relevant scenarios, a certain actions must be performed before another action.
+In multiple scenarios, including security relevant scenarios, a certain action must be performed before another action.
 For example, before you can use a method you must first initialize the class providing the method.
 
 Create a test case for [Exercise5.ql](solutions/Exercise5.ql) using the following Java snippet and implement [Exercise5.ql](solutions/Exercise5.ql) to ensure the `incorrectUse` is detected.
@@ -366,9 +367,9 @@ A solution can be found in the query [Exercise5.ql](solutions/Exercise5.ql)
 #### Exercise 6
 
 First time use of the _successor_ relationship and _reachability_ can result in surprising result.
-The _successor_ relationship relates program elements that can resided in different scopes within a method.
+The _successor_ relationship relates program elements that can reside in different scopes within a method.
 
-For example, any program element following an `if` statement will be related with one or more statements in the `if` body.
+For example, any program element following an `if` statement will be related to one or more statements in the `if` body.
 Consider the following case:
 
 ```java
@@ -384,7 +385,7 @@ Consider the following case:
 ```
 
 The `someAction` method access is reachable from an `initialize` method access.
-This probably means that the solution to exercise 5 will not find this incorrect use, which is the case for our solution to exercise 5.
+This means that the solution to exercise 5 will not find this incorrect use, which is the case for our solution to exercise 5.
 
 To ensure that all accesses of the method `someAction` are preceded by an `initialize` access we can make use of the [dominator](https://en.wikipedia.org/wiki/Dominator_(graph_theory)) concept from graph theory.
 A node **dominates** another node if every path from the _entry node_ to a node _m_ must go through node _n_.
@@ -468,8 +469,8 @@ void correctAndIncorrectUse(SomeApi api) {
 }
 ```
 
-To identify the correct use we need to exclude _calls_ in callers of the `correctAndIncorrectUse` method.
-Each of those _calls_ maybe dominated by a call to `initialize` or a call that always calls `initialize`.
+To identify the correct use, we need to exclude _calls_ in callers of the `correctAndIncorrectUse` method.
+Each of those _calls_ may be dominated by a call to `initialize` or a call that always calls `initialize`.
 
 The reasoning about _callers_ and _callees_ makes use of a different control flow graph known as the (static) [Call graph](https://en.wikipedia.org/wiki/Call_graph).
 Implement the query `dominatingCall` in [Exercise8.ql](exercises/Exercise8.ql) and use it to determine if there is an interprocedural call to `initialize` or a callable that always calls `initialize` that dominates the call to `someAction`.
@@ -478,7 +479,7 @@ Implement the query `dominatingCall` in [Exercise8.ql](exercises/Exercise8.ql) a
 <summary>Hints</summary>
 
 - The `Call` class has a member predicate `getCallee` to reason about the callables it can call.
-- THe `ControlFlowNode` class has a member predicate `getEnclosingCallable` to reason about the callable that contains the control flow node.
+- The `ControlFlowNode` class has a member predicate `getEnclosingCallable` to reason about the callable that contains the control flow node.
 
 </details>
 
@@ -487,12 +488,12 @@ A solution can be found in the query [Exercise8.ql](solutions/Exercise8.ql)
 #### Exercise 9
 
 Multiple corner cases down the line the question arises whether there isn't a better way to solve our problem.
-While our current solutions get incrementally better we still have a lot of corner cases to cover.
+While our solutions improved incrementally, we still have a lot of corner cases to cover.
 For example, we didn't even consider that the qualifiers of the `initialize` calls are the same as the `someAction` calls.
 
 The answer to the question is yes. Data flow is analysis enabled by the CFG that can with a more succinct analysis specification and more precision answer the question we tried to solve with only the CFG. Is a method access preceded by another method access.
 
-As a precursor to the data flow workshop we are going to implement parts of an interprocedural dataflow configuration to find uses of `someAction` without a preceding call to `initialize`. The core idea is to track the object instance to its use as a qualifier to the method access `someAction` and stop tracking the object instance if it is used as a qualifier to the method access `initialize`.
+As a precursor to the data flow workshop, we are going to implement parts of an interprocedural dataflow configuration to find uses of `someAction` without a preceding call to `initialize`. The core idea is to track the object instance to its use as a qualifier to the method access `someAction` and stop tracking the object instance if it is used as a qualifier to the method access `initialize`.
 
 Complete the dataflow configuration in [Exercise9.ql](solutions/Exercise9.ql)
 
@@ -502,7 +503,7 @@ Complete the dataflow configuration in [Exercise9.ql](solutions/Exercise9.ql)
 - The class `ConstructorCall` can be used to reason about type creations.
 - The class `ConstructorCall` has a member predicate `getConstructedType()` to get the type of the object that is created.
 - Interprocedural dataflow uses the concepts of a _source_ and a _sink_ for which it determines if the source can reach the sink.
-  A barrier is a condition that prevents further analysis to determine if a sink is reachable and is typically used to exclude data that is sanitizes or validated.
+  A barrier is a condition that prevents further analysis to determine if a sink is reachable and is typically used to exclude data that is sanitized or validated.
 
 </details>
 
