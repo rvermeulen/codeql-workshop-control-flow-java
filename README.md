@@ -53,7 +53,7 @@ In these exercises you will learn:
 - How control flow is represented in QL.
 - How to reason about reachability using recursive predicates and transitive closures.
 - About properties of control flow graph nodes, such as dominating other control flow nodes.
-- About corner-cases when reasoning about control flow and how data flow can higher level construct to answer reachability questions.
+- About corner-cases when reasoning using control flow and how data flow provides higher level construct to answer reachability questions.
 
 ### Control flow
 
