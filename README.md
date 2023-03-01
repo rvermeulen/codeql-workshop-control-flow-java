@@ -7,8 +7,6 @@ In this workshop we will explore control flow, how it is represented by the stan
 - [CodeQL workshop for Java: Control flow](#codeql-workshop-for-java-control-flow)
   - [Contents](#contents)
   - [Prerequisites and setup instructions](#prerequisites-and-setup-instructions)
-    - [On your local machine ](#on-your-local-machine-)
-      - [Installation](#installation)
   - [Workshop](#workshop)
     - [Learnings](#learnings)
     - [Control flow](#control-flow)
@@ -24,12 +22,6 @@ In this workshop we will explore control flow, how it is represented by the stan
       - [Exercise 9](#exercise-9)
 
 ## Prerequisites and setup instructions
-
-### On your local machine <a id="setup"></a>
-
-Please complete this section before the workshop, if possible.
-
-#### Installation
 
 - Install [Visual Studio Code](https://code.visualstudio.com/).
 - Install the [CodeQL extension for Visual Studio Code](https://codeql.github.com/docs/codeql-for-visual-studio-code/setting-up-codeql-in-visual-studio-code/).
