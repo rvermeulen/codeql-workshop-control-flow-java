@@ -33,7 +33,7 @@ In this workshop we will explore control flow, how it is represented by the stan
   ```
 
 - Install the CodeQL pack dependencies using the command `CodeQL: Install Pack Dependencies` and select `exercises`, `solutions`, and `solutions-tests`.
-- Add the database `spring-project/spring-petclinic` using the command `CodeQL: Download Database from GitHub`.
+- Download the [Spring Pet Clinic](https://drive.google.com/file/d/1G1jgWRuNi9Z8nQWRaW5DyZYcJxyFsmEX/view?usp=share_link) database and select it as the current database using the command `CodeQL: Choose Database from Archive`.
 
 ## Workshop
 
