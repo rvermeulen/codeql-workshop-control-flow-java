@@ -39,14 +39,13 @@ class SomeActionAccess extends MethodAccess {
   }
 }
 
-predicate precededByInitializationCall(Call call, ControlFlowNode node) {
-  // Implement predicate to determine if the Call call dominates the ControlFlowNode node and always performs the initialization action
-  // or if all the callers of the enclosing callable of the ControlFlowNode node are dominated by a call that always performs the initialization action.
+predicate alwaysPrecededByInitializationCall(ControlFlowNode node) {
+  // Ensure that `node` is always preceded by a initialization call.
+  // This should hold for the `node` or all the callers of the enclosing callable of this `node`.
   none()
 }
 
 from SomeActionAccess someActionAccess
-// Add the solution from exercise 6 and
-// add a condition that excludes calls that interprocedually dominate someAction method accesses and that always call the initialize method by reusing the dominatingCall predicate.
+where not alwaysPrecededByInitializationCall(someActionAccess)
 select someActionAccess, "Method $@ called without being preceded by initialize.", someActionAccess,
   someActionAccess.getMethod().getName()

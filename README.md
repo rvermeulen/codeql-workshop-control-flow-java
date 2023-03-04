@@ -464,7 +464,7 @@ void correctAndIncorrectUse(SomeApi api) {
 To identify the correct uses, we need to determine if all the _callers_ of `correctAndIncorrectUse` are dominated by an initialize method access, or call that always performs the initialize method access.
 
 The reasoning about _callers_ and _callees_ makes use of a different control flow graph known as the (static) [Call graph](https://en.wikipedia.org/wiki/Call_graph).
-Implement the query `precededByInitializationCall` in [Exercise8.ql](exercises/Exercise8.ql) and use it to determine if there is an interprocedural call to `initialize` or a call to method that always calls `initialize` and those calls dominates the call to `someAction`.
+Implement the query `alwaysPrecededByInitializationCall` in [Exercise8.ql](exercises/Exercise8.ql) and use it to determine that a `ControlFlowNode` is always directly preceded by an initialization method access, or the property holds for all the callers of its enclosing callable.
 
 <details>
 <summary>Hints</summary>
