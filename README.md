@@ -318,7 +318,7 @@ Now that we understand the _successor_ relation, the control flow graph, and _re
 In multiple scenarios, including security relevant scenarios, a certain action must be performed before another action.
 For example, before you can use a method you must first initialize the class providing the method.
 
-Create a test case for [Exercise5.ql](solutions/Exercise5.ql) using the following Java snippet and implement [Exercise5.ql](solutions/Exercise5.ql) to ensure the `incorrectUse` is detected.
+Look at the [test case](exercises-tests/Exercise5/Test.java) for [Exercise5.ql](exercises/Exercise5.ql) using the following Java snippet and implement [Exercise5.ql](exercises/Exercise5.ql) to ensure the `incorrectUse` is detected.
 
 ```java
 class SomeApi {
@@ -385,7 +385,7 @@ If we swap _m_ with method access for `someAction`  and _n_ with method access o
 
 The standard library provides the predicate `dominates` that is defined in the the module [Dominance](https://codeql.github.com/codeql-standard-libraries/java/semmle/code/java/controlflow/Dominance.qll/module.Dominance.html).
 
-Use the predicate `dominates` and update the solution to [Exercise5.ql](solutions/Exercise5.ql) in  [Exercise6.ql](exercises/Exercise6.ql) to account for the new case.
+Use the predicate `dominates` and update the solution to [Exercise5.ql](exercises/Exercise5.ql) in  [Exercise6.ql](exercises/Exercise6.ql) to account for the new case.
 
 <details>
 <summary>Hints</summary>
@@ -441,9 +441,9 @@ A solution can be found in the query [Exercise7.ql](solutions/Exercise7.ql)
 
 #### Exercise 8
 
-In the previous exercise we started to reason interprocedurally about the control flow. However, our reasoning was incomplete because we only considered calls domininating the `someAction` method access within the same callable (i.e. method in the test case).
+In the previous exercise we started to reason interprocedurally about the control flow. However, our reasoning was incomplete because we only considered calls dominating the `someAction` method access within the same callable (i.e. method in the test case).
 
-Expand the test case with the following cases:
+Consider the following interprocedural case where one caller correctly initializes the API, and one that doesn't.
 
 ```java
 void correctCaller() {
@@ -461,17 +461,18 @@ void correctAndIncorrectUse(SomeApi api) {
 }
 ```
 
-To identify the correct use, we need to exclude _calls_ in callers of the `correctAndIncorrectUse` method.
-Each of those _calls_ may be dominated by a call to `initialize` or a call that always calls `initialize`.
+To identify the correct uses, we need to determine if all the _callers_ of `correctAndIncorrectUse` are dominated by an initialize method access, or call that always performs the initialize method access.
 
 The reasoning about _callers_ and _callees_ makes use of a different control flow graph known as the (static) [Call graph](https://en.wikipedia.org/wiki/Call_graph).
-Implement the query `dominatingCall` in [Exercise8.ql](exercises/Exercise8.ql) and use it to determine if there is an interprocedural call to `initialize` or a callable that always calls `initialize` that dominates the call to `someAction`.
+Implement the query `precededByInitializationCall` in [Exercise8.ql](exercises/Exercise8.ql) and use it to determine if there is an interprocedural call to `initialize` or a call to method that always calls `initialize` and those calls dominates the call to `someAction`.
 
 <details>
 <summary>Hints</summary>
 
 - The `Call` class has a member predicate `getCallee` to reason about the callables it can call.
 - The `ControlFlowNode` class has a member predicate `getEnclosingCallable` to reason about the callable that contains the control flow node.
+- To state that a property must hold for all values (e.g., all callers) use the formula [forall](https://codeql.github.com/docs/ql-language-reference/formulas/#forall). Note that the `forall` formula holds vacuously if there are no values to test the property on because it is logicall the same as `not exists(<vars> | <formula 1> | not <formula 2>)`.
+If there needs to be atleast one value for which the property holds you can use the [forex](https://codeql.github.com/docs/ql-language-reference/formulas/#forex) formula.
 
 </details>
 
