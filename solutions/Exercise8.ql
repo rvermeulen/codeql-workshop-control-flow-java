@@ -36,20 +36,15 @@ class SomeActionAccess extends MethodAccess {
   }
 }
 
-predicate dominatingCall(Call call, ControlFlowNode node) {
-  dominates(call, node)
+predicate precededByInitializationCall(Call call, ControlFlowNode node) {
+  dominates(call, node) and any(InitActionConfiguration config).callAlwaysPerformsAction(call)
   or
-  exists(Call caller | caller.getCallee() = node.getEnclosingCallable() |
-    dominatingCall(call, caller)
-  )
+  forex(Call caller | caller.getCallee() = node.getEnclosingCallable() | precededByInitializationCall(call, caller))
 }
 
 from SomeActionAccess someActionAccess
 where
   not exists(InitializeAccess initializeAccess | dominates(initializeAccess, someActionAccess)) and
-  not exists(Call call, InitActionConfiguration config |
-    dominatingCall(call, someActionAccess) and
-    (config.callAlwaysPerformsAction(call) or call instanceof InitializeAccess)
-  )
+  not exists(Call call | precededByInitializationCall(call, someActionAccess))
 select someActionAccess, "Method $@ called without being preceded by initialize.", someActionAccess,
   someActionAccess.getMethod().getName()

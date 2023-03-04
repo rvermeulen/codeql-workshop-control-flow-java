@@ -39,8 +39,9 @@ class SomeActionAccess extends MethodAccess {
   }
 }
 
-predicate dominatingCall(Call call, ControlFlowNode node) {
-  // Implement predicate to determine if the Call call dominates the ControlFlowNode node interprocedurally.
+predicate precededByInitializationCall(Call call, ControlFlowNode node) {
+  // Implement predicate to determine if the Call call dominates the ControlFlowNode node and always performs the initialization action
+  // or if all the callers of the enclosing callable of the ControlFlowNode node are dominated by a call that always performs the initialization action.
   none()
 }
 
