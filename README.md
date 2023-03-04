@@ -32,7 +32,7 @@ In this workshop we will explore control flow, how it is represented by the stan
   git clone https://github.com/rvermeulen/codeql-workshop-control-flow-java
   ```
 
-- Install the CodeQL pack dependencies using the command `CodeQL: Install Pack Dependencies` and select `exercises`, `solutions`, and `solutions-tests`.
+- Install the CodeQL pack dependencies using the command `CodeQL: Install Pack Dependencies` and select `exercises`, `exercises-tests`, `solutions`, and `solutions-tests`.
 - Select the Spring Pet Clinic database as the current database by right-clicking on the file `spring-petclinic.zip` in the File explorer and running the command `CodeQL: Set Current Database`.
 
 ## Workshop
